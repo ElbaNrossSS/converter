@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DönüştürBunu - Dosya Dönüştürme Servisi</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-exchange-alt"></i>
+                <h1>DönüştürBunu</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="active" data-section="home">Ana Sayfa</a></li>
+                <li><a href="#" data-section="contact">İletişim</a></li>
+            </ul>
+            <div class="settings">
+                <div class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="themeSwitch">
+                        <label for="themeSwitch"></label>
+                    </div>
+                </div>
+                <div class="language-selector">
+                    <select id="languageSelect">
+                        <option value="tr">Türkçe</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="converter-section">
+            <h2>Dosya Dönüştürücü</h2>
+            <div class="converter-container">
+                <div class="converter-tabs">
+                    <button class="tab-btn active" data-type="video">Video</button>
+                    <button class="tab-btn" data-type="audio">Ses</button>
+                    <button class="tab-btn" data-type="image">Görsel</button>
+                    <button class="tab-btn" data-type="document">Belge</button>
+                </div>
+                <div class="file-upload">
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Dosyalarınızı sürükleyin veya <span>gözatın</span></p>
+                        <p class="upload-hint">Birden fazla dosya seçmek için Ctrl tuşuna basılı tutun</p>
+                        <input type="file" id="fileInput" multiple hidden>
+                    </div>
+                    <div class="file-list" id="fileList">
+                        <!-- Yüklenen dosyalar burada listelenecek -->
+                    </div>
+                </div>
+                
+                <div class="conversion-options">
+                    <div class="option-group">
+                        <label for="convertTo" id="formatLabel">Dönüştürülecek format:</label>
+                        <select id="convertTo">
+                            <option value="mp3">MP3</option>
+                            <option value="mp4">MP4</option>
+                            <option value="jpg">JPG</option>
+                            <option value="png">PNG</option>
+                            <option value="pdf">PDF</option>
+                            <option value="docx">DOCX</option>
+                        </select>
+                    </div>
+                    <button class="btn convert-btn" id="convertBtn" disabled>Dönüştür</button>
+                </div>
+            </div>
+        </section>
+        
+        <section class="contact-section" id="contact-section" style="display: none;">
+            <h2>İletişim</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <p>info@donusturbunu.com</p>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <p>+90 555 123 4567</p>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>İstanbul, Türkiye</p>
+                    </div>
+                </div>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Adınız</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-posta</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Mesajınız</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn primary-btn">Gönder</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-exchange-alt"></i>
+                <h2>DönüştürBunu</h2>
+                <p>Tüm dosya dönüştürme ihtiyaçlarınız için</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h3>Hızlı Erişim</h3>
+                    <ul>
+                        <li><a href="#">Ana Sayfa</a></li>
+                        <li><a href="#">İletişim</a></li>
+                        <li><a href="#">Gizlilik Politikası</a></li>
+                        <li><a href="#">Kullanım Şartları</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Dönüştürücüler</h3>
+                    <ul>
+                        <li><a href="#" data-type="video">Video Dönüştürücü</a></li>
+                        <li><a href="#" data-type="audio">Ses Dönüştürücü</a></li>
+                        <li><a href="#" data-type="image">Görsel Dönüştürücü</a></li>
+                        <li><a href="#" data-type="document">Belge Dönüştürücü</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>İletişim</h3>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-envelope"></i> info@donusturbunu.com</li>
+                        <li><i class="fas fa-phone"></i> +90 555 123 4567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> İstanbul, Türkiye</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 DönüştürBunu. Tüm hakları saklıdır.</p>
+            <div class="social-icons">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
