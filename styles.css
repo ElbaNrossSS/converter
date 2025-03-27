@@ -234,9 +234,15 @@ nav {
 }
 
 .conversion-options {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(10px);
+    display: none;
+}
+
+.conversion-options.show {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .option-group {
@@ -257,6 +263,23 @@ nav {
     border-radius: var(--border-radius);
     background-color: var(--white);
     font-family: inherit;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.option-group select:hover {
+    border-color: var(--primary-color);
+}
+
+.option-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
 }
 
 .convert-btn {
@@ -435,14 +458,16 @@ footer {
 }
 
 .footer-column ul {
-    list-style: none;
+    display: flex;
+    gap: 20px;
     padding: 0;
-    margin: 0;
+    list-style: none;
 }
 
 .footer-column ul li {
-    margin-bottom: 0.8rem;
+    margin: 0;
 }
+
 
 .footer-column ul li a {
     color: var(--light-text);
@@ -591,6 +616,7 @@ footer {
         padding: 0.5rem;
     }
     
+    
     .hero-content h1 {
         font-size: 2rem;
     }
@@ -628,12 +654,12 @@ footer {
 }
 
 .upload-area.file-loaded {
-    border-color: #28a745;
-    background-color: rgba(40, 167, 69, 0.05);
+    border-color: var(--primary-color);
+    background-color: rgba(var(--primary-rgb), 0.05);
 }
 
 .upload-area.file-loaded i {
-    color: #28a745;
+    color: var(--primary-color);
 }
 
 /* Bildirim Sistemi */
@@ -699,55 +725,71 @@ footer {
     background-color: var(--white);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
-    animation: fadeIn 0.5s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+.conversion-result.show {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .conversion-result h3 {
-    margin-bottom: 1.5rem;
+    text-align: center;
     color: var(--secondary-color);
+    margin-bottom: 1.5rem;
 }
 
 .result-file {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 1rem;
     background-color: var(--bg-color);
     border-radius: var(--border-radius);
 }
 
-.file-icon {
+.result-file .file-icon {
     font-size: 2rem;
     color: var(--primary-color);
     margin-right: 1rem;
 }
 
-.file-details {
+.result-file .file-details {
     flex: 1;
 }
 
-.file-name {
+.result-file .file-name {
     font-weight: 500;
     margin-bottom: 0.3rem;
 }
 
-.file-size {
-    color: var(--light-text);
+.result-file .file-size {
     font-size: 0.9rem;
-    margin: 0;
+    color: var(--light-text);
 }
 
 .download-btn {
     padding: 0.6rem 1.2rem;
-    background-color: #28a745;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .download-btn:hover {
-    background-color: #218838;
+    background-color: var(--secondary-color);
+}
+
+.download-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 /* Format Bilgisi */
@@ -895,14 +937,6 @@ footer {
     }
 }
 
-/* Sekme butonları için stiller */
-.converter-tabs {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid #ddd;
-}
-
 .tab-btn {
     padding: 1rem 1.5rem;
     background: none;
@@ -1009,10 +1043,6 @@ footer {
 @media (max-width: 768px) {
     .contact-container {
         grid-template-columns: 1fr;
-    }
-    
-    .converter-tabs {
-        flex-wrap: wrap;
     }
     
     .tab-btn {
@@ -1302,5 +1332,253 @@ footer {
 }
 
 [data-theme="dark"] .modal-header {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dropdown menü stilleri */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dropdown-toggle i {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.dropdown.active .dropdown-toggle i {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 200px;
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+}
+
+.dropdown.active .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu li {
+    margin: 0;
+}
+
+.dropdown-menu li a {
+    display: block;
+    padding: 0.8rem 1.5rem;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    text-align: left;
+}
+
+.dropdown-menu li a:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--primary-color);
+}
+
+.dropdown-menu .divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 0.5rem 0;
+}
+
+/* Karanlık tema için dropdown stilleri */
+[data-theme="dark"] .dropdown-menu {
+    background-color: var(--white);
+}
+
+[data-theme="dark"] .dropdown-menu li a {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .dropdown-menu li a:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .dropdown-menu .divider {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Mobil görünüm için dropdown stilleri */
+@media (max-width: 768px) {
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        background-color: transparent;
+        padding: 0;
+        margin-left: 1rem;
+        transform: none;
+        display: none;
+    }
+    
+    .dropdown.active .dropdown-menu {
+        display: block;
+    }
+    
+    .dropdown-menu li a {
+        padding: 0.5rem 1rem;
+    }
+    
+    .dropdown-menu .divider {
+        display: none;
+    }
+}
+
+/* Dönüştürme geçmişi ve paylaşım seçenekleri için stiller */
+.conversion-history, .sharing-options {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transition-delay: 0.2s;
+}
+
+.conversion-history.show, .sharing-options.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.conversion-history h3, .sharing-options h3 {
+    text-align: center;
+    color: var(--secondary-color);
+    margin-bottom: 1.5rem;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.clear-history {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.clear-history:hover {
+    color: var(--secondary-color);
+}
+
+.history-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem;
+    border-bottom: 1px solid #eee;
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.history-item .file-icon {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-right: 1rem;
+}
+
+.history-item .file-details {
+    flex: 1;
+}
+
+.history-item .file-name {
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+}
+
+.history-item .file-meta {
+    display: flex;
+    font-size: 0.8rem;
+    color: var(--light-text);
+}
+
+.history-item .file-date {
+    margin-right: 1rem;
+}
+
+.sharing-options .share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.share-btn.facebook {
+    background-color: #3b5998;
+}
+
+.share-btn.twitter {
+    background-color: #1da1f2;
+}
+
+.share-btn.whatsapp {
+    background-color: #25d366;
+}
+
+.share-btn.email {
+    background-color: #ea4335;
+}
+
+.share-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Karanlık tema için uyarlamalar */
+[data-theme="dark"] .conversion-result,
+[data-theme="dark"] .conversion-history,
+[data-theme="dark"] .sharing-options {
+    background-color: var(--white);
+}
+
+[data-theme="dark"] .result-file {
+    background-color: var(--bg-color);
+}
+
+[data-theme="dark"] .history-item {
     border-bottom-color: rgba(255, 255, 255, 0.1);
 } 

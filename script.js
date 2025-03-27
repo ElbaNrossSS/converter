@@ -5,9 +5,328 @@ document.addEventListener('DOMContentLoaded', function() {
     // Dosya yükleme alanı işlevselliği
     const uploadArea = document.getElementById('uploadArea');
     const fileInput = document.getElementById('fileInput');
-    const fileName = document.getElementById('fileName');
     const convertBtn = document.getElementById('convertBtn');
     const fileList = document.getElementById('fileList');
+    
+    // Gizlilik Politikası ve Kullanım Şartları bağlantıları
+    const privacyLink = document.querySelector('a[data-section="privacy"]');
+    const termsLink = document.querySelector('a[data-section="terms"]');
+    
+    // Gizlilik Politikası bağlantısına tıklandığında
+    if (privacyLink) {
+        privacyLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Gizlilik Politikası modalını göster
+            showModal(
+                currentLanguage === 'tr' ? 'Gizlilik Politikası' : 'Privacy Policy',
+                getPrivacyPolicyContent(currentLanguage)
+            );
+        });
+    }
+    
+    // Kullanım Şartları bağlantısına tıklandığında
+    if (termsLink) {
+        termsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Kullanım Şartları modalını göster
+            showModal(
+                currentLanguage === 'tr' ? 'Kullanım Şartları' : 'Terms of Use',
+                getTermsContent(currentLanguage)
+            );
+        });
+    }
+    
+    // Modal gösterme fonksiyonu
+    function showModal(title, content) {
+        // Varsa mevcut modalı kaldır
+        const existingModal = document.querySelector('.modal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
+        // Yeni modal oluştur
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>${title}</h2>
+                    <button class="close-modal"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    ${content}
+                </div>
+            </div>
+        `;
+        
+        // Modalı sayfaya ekle
+        document.body.appendChild(modal);
+        
+        // Modal arka planına tıklandığında kapat
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal(modal);
+            }
+        });
+        
+        // Kapat butonuna tıklandığında
+        const closeBtn = modal.querySelector('.close-modal');
+        closeBtn.addEventListener('click', () => {
+            closeModal(modal);
+        });
+        
+        // ESC tuşuna basıldığında modalı kapat
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal(modal);
+            }
+        });
+        
+        // Modalı göster (animasyonlu)
+        setTimeout(() => {
+            modal.classList.add('show');
+        }, 10);
+    }
+    
+    // Modal kapatma fonksiyonu
+    function closeModal(modal) {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.remove();
+        }, 300);
+    }
+    
+    // Gizlilik Politikası içeriği
+    function getPrivacyPolicyContent(language) {
+        if (language === 'tr') {
+            return `
+                <h3>Gizlilik Politikası</h3>
+                <p>Son güncellenme: 27.03.2025</p>
+                
+                <h4>1. Toplanan Bilgiler</h4>
+                <p>DönüştürBunu hizmeti, dosya dönüştürme işlemlerini gerçekleştirmek için geçici olarak dosyalarınızı işler. Dönüştürme işlemi tamamlandıktan sonra, dosyalarınız sunucularımızdan otomatik olarak silinir. Kalıcı olarak hiçbir kullanıcı dosyası saklanmaz.</p>
+                
+                <h4>2. Çerezler ve İzleme Teknolojileri</h4>
+                <p>Sitemiz, hizmetlerimizi iyileştirmek ve kullanıcı deneyimini geliştirmek amacıyla çerezler kullanabilir. Bu çerezler, tercihlerinizi hatırlamak ve site trafiğini analiz etmek için kullanılır.</p>
+                
+                <h4>3. Bilgilerin Paylaşımı</h4>
+                <p>Kullanıcı dosyaları veya kişisel bilgiler üçüncü taraflarla paylaşılmaz. Ancak, yasal zorunluluk durumunda veya hizmetlerimizin düzgün çalışması için gerekli olduğunda bilgilerinizi paylaşabiliriz.</p>
+                
+                <h4>4. Veri Güvenliği</h4>
+                <p>Dosyalarınızın güvenliği bizim için önemlidir. Tüm dosya transferleri güvenli SSL bağlantısı üzerinden gerçekleştirilir ve işlem tamamlandıktan sonra dosyalarınız sunucularımızdan silinir.</p>
+                
+                <h4>5. Kullanıcı Hakları</h4>
+                <p>Kullanıcılar, kendileri hakkında toplanan bilgilere erişme, düzeltme veya silme hakkına sahiptir. Herhangi bir sorunuz veya talebiniz varsa, lütfen bizimle iletişime geçin.</p>
+                
+                <h4>6. Politika Değişiklikleri</h4>
+                <p>Bu gizlilik politikası zaman zaman güncellenebilir. Değişiklikler bu sayfada yayınlanacaktır. Sitemizi kullanmaya devam ederek, güncellenmiş politikayı kabul etmiş sayılırsınız.</p>
+            `;
+        } else {
+            return `
+                <h3>Privacy Policy</h3>
+                <p>Last updated: 03/27/2025</p>
+                
+                <h4>1. Information Collected</h4>
+                <p>The DönüştürBunu service temporarily processes your files to perform conversion operations. After the conversion is completed, your files are automatically deleted from our servers. No user files are permanently stored.</p>
+                
+                <h4>2. Cookies and Tracking Technologies</h4>
+                <p>Our site may use cookies to improve our services and enhance user experience. These cookies are used to remember your preferences and analyze site traffic.</p>
+                
+                <h4>3. Information Sharing</h4>
+                <p>User files or personal information are not shared with third parties. However, we may share your information when legally required or necessary for the proper functioning of our services.</p>
+                
+                <h4>4. Data Security</h4>
+                <p>The security of your files is important to us. All file transfers are conducted over secure SSL connections, and your files are deleted from our servers after processing is complete.</p>
+                
+                <h4>5. User Rights</h4>
+                <p>Users have the right to access, correct, or delete information collected about them. If you have any questions or requests, please contact us.</p>
+                
+                <h4>6. Policy Changes</h4>
+                <p>This privacy policy may be updated from time to time. Changes will be posted on this page. By continuing to use our site, you are deemed to have accepted the updated policy.</p>
+            `;
+        }
+    }
+    
+    // Kullanım Şartları içeriği
+    function getTermsContent(language) {
+        if (language === 'tr') {
+            return `
+                <h3>Kullanım Şartları</h3>
+                <p>Son güncellenme: 27.03.2025</p>
+                
+                <h4>1. Hizmet Kullanımı</h4>
+                <p>DönüştürBunu hizmetini kullanarak, bu kullanım şartlarını kabul etmiş olursunuz. Hizmetimizi yasa dışı amaçlarla veya bu şartları ihlal edecek şekilde kullanmayı kabul etmiyorsunuz.</p>
+                
+                <h4>2. Dosya Dönüştürme</h4>
+                <p>Hizmetimiz, çeşitli dosya formatları arasında dönüştürme yapmanıza olanak tanır. Dönüştürülen dosyaların kalitesi, orijinal dosyanın kalitesine ve seçilen formata bağlıdır.</p>
+                
+                <h4>3. Telif Hakkı</h4>
+                <p>Kullanıcılar, telif hakkı sahibi oldukları veya dönüştürme hakkına sahip oldukları dosyaları yüklemelidir. Telif hakkı ihlali durumunda sorumluluk kullanıcıya aittir.</p>
+                
+                <h4>4. Hizmet Sınırlamaları</h4>
+                <p>Dosya boyutu ve dönüştürme sıklığı konusunda sınırlamalar uygulayabiliriz. Bu sınırlamalar, hizmetin tüm kullanıcılar için adil ve verimli bir şekilde çalışmasını sağlamak içindir.</p>
+                
+                <h4>5. Sorumluluk Reddi</h4>
+                <p>Hizmetimiz "olduğu gibi" sunulmaktadır. Dönüştürülen dosyaların doğruluğu, kalitesi veya belirli bir amaca uygunluğu konusunda hiçbir garanti vermiyoruz.</p>
+                
+                <h4>6. Şartlarda Değişiklik</h4>
+                <p>Bu kullanım şartları zaman zaman güncellenebilir. Değişiklikler bu sayfada yayınlanacaktır. Hizmeti kullanmaya devam ederek, güncellenmiş şartları kabul etmiş sayılırsınız.</p>
+            `;
+        } else {
+            return `
+                <h3>Terms of Use</h3>
+                <p>Last updated: 03/27/2025</p>
+                
+                <h4>1. Service Usage</h4>
+                <p>By using the DönüştürBunu service, you agree to these terms of use. You agree not to use our service for illegal purposes or in a way that violates these terms.</p>
+                
+                <h4>2. File Conversion</h4>
+                <p>Our service allows you to convert between various file formats. The quality of converted files depends on the quality of the original file and the selected format.</p>
+                
+                <h4>3. Copyright</h4>
+                <p>Users should upload files for which they own the copyright or have the right to convert. The user is responsible in case of copyright infringement.</p>
+                
+                <h4>4. Service Limitations</h4>
+                <p>We may apply limitations on file size and conversion frequency. These limitations are to ensure the service works fairly and efficiently for all users.</p>
+                
+                <h4>5. Disclaimer</h4>
+                <p>Our service is provided "as is". We make no warranties regarding the accuracy, quality, or fitness for a particular purpose of the converted files.</p>
+                
+                <h4>6. Changes to Terms</h4>
+                <p>These terms of use may be updated from time to time. Changes will be posted on this page. By continuing to use the service, you are deemed to have accepted the updated terms.</p>
+            `;
+        }
+    }
+    
+    // CSS stillerini ekle
+    const modalStyles = document.createElement('style');
+    modalStyles.textContent = `
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            color: #333;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+            transition: color 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            color: #333;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-body h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .modal-body h4 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #444;
+        }
+        
+        .modal-body p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            color: #666;
+        }
+        
+        /* Karanlık tema için */
+        [data-theme="dark"] .modal-content {
+            background-color: #333;
+        }
+        
+        [data-theme="dark"] .modal-header {
+            border-bottom-color: #444;
+        }
+        
+        [data-theme="dark"] .modal-header h2 {
+            color: #fff;
+        }
+        
+        [data-theme="dark"] .close-modal {
+            color: #aaa;
+        }
+        
+        [data-theme="dark"] .close-modal:hover {
+            color: #fff;
+        }
+        
+        [data-theme="dark"] .modal-body h3,
+        [data-theme="dark"] .modal-body h4 {
+            color: #fff;
+        }
+        
+        [data-theme="dark"] .modal-body p {
+            color: #ccc;
+        }
+        
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                max-height: 85vh;
+            }
+        }
+    `;
+    
+    document.head.appendChild(modalStyles);
     
     // Dosya yükleme alanına tıklandığında dosya seçiciyi aç
     uploadArea.addEventListener('click', () => {
@@ -62,11 +381,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 createFileItem(file, index);
             });
             
+            // Dönüştürme seçeneklerini göster (animasyonlu)
+            const conversionOptions = document.querySelector('.conversion-options');
+            conversionOptions.style.display = 'block';
+            
+            // Animasyon için kısa bir gecikme
+            setTimeout(() => {
+                conversionOptions.classList.add('show');
+            }, 10);
+            
             // Dönüştür butonunu etkinleştir
-            convertBtn.disabled = files.length === 0;
+            convertBtn.disabled = false;
             
             // Dosya yükleme alanına başarılı sınıfı ekle
             uploadArea.classList.add('file-loaded');
+            
+            // Dosya türüne göre format seçeneklerini güncelle
+            updateFormatOptions(files[0].type);
         }
     }
     
@@ -112,10 +443,9 @@ document.addEventListener('DOMContentLoaded', function() {
         removeBtn.addEventListener('click', () => {
             fileItem.remove();
             
-            // Dosya listesi boşsa dönüştür butonunu devre dışı bırak
+            // Dosya listesi boşsa dönüştürme seçeneklerini gizle
             if (fileList.children.length === 0) {
-                convertBtn.disabled = true;
-                uploadArea.classList.remove('file-loaded');
+                clearFileList();
             }
         });
         
@@ -148,90 +478,113 @@ document.addEventListener('DOMContentLoaded', function() {
             // Ses önizleme
             const reader = new FileReader();
             reader.onload = (e) => {
-                container.innerHTML = `<audio controls class="preview-audio"><source src="${e.target.result}" type="${file.type}"></audio>`;
+                container.innerHTML = `
+                    <audio controls class="preview-audio">
+                        <source src="${e.target.result}" type="${file.type}">
+                        ${currentLanguage === 'tr' ? 'Tarayıcınız ses dosyasını desteklemiyor.' : 'Your browser does not support the audio element.'}
+                    </audio>
+                `;
             };
             reader.readAsDataURL(file);
         } else if (file.type.startsWith('video/')) {
             // Video önizleme
             const reader = new FileReader();
             reader.onload = (e) => {
-                container.innerHTML = `<video controls class="preview-video"><source src="${e.target.result}" type="${file.type}"></video>`;
+                container.innerHTML = `
+                    <video controls class="preview-video">
+                        <source src="${e.target.result}" type="${file.type}">
+                        ${currentLanguage === 'tr' ? 'Tarayıcınız video dosyasını desteklemiyor.' : 'Your browser does not support the video element.'}
+                    </video>
+                `;
             };
             reader.readAsDataURL(file);
         } else {
             // Diğer dosya türleri için önizleme yok
-            container.innerHTML = `<p>${currentLanguage === 'tr' ? 'Bu dosya türü için önizleme kullanılamıyor.' : 'Preview not available for this file type.'}</p>`;
+            container.innerHTML = `<p class="preview-not-available">${currentLanguage === 'tr' ? 'Bu dosya türü için önizleme kullanılamıyor.' : 'Preview not available for this file type.'}</p>`;
         }
     }
     
-    // Dosya türüne göre dönüştürme seçeneklerini güncelleme
-    function updateConversionOptions(fileType) {
-        const convertTo = document.getElementById('convertTo');
-        convertTo.innerHTML = ''; // Mevcut seçenekleri temizle
+    // Dosya boyutunu formatla
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
         
-        // Format açıklamaları bölümünü temizle
-        if (document.getElementById('formatInfo')) {
-            document.getElementById('formatInfo').remove();
-        }
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
         
-        let formatOptions = [];
-        
-        if (fileType.startsWith('video/')) {
-            // Video dosyası için seçenekler
-            formatOptions = [
-                { value: 'mp3', text: 'MP3', desc: 'Ses dosyası formatı, sadece ses çıkarılır' },
-                { value: 'mp4', text: 'MP4', desc: 'Yaygın video formatı, çoğu cihazla uyumlu' },
-                { value: 'webm', text: 'WebM', desc: 'Web için optimize edilmiş video formatı' },
-                { value: 'avi', text: 'AVI', desc: 'Yüksek kaliteli video formatı' }
-            ];
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    // Dosya türüne göre ikon belirle
+    function getFileIcon(fileType) {
+        if (fileType.startsWith('image/')) {
+            return 'fa-file-image';
         } else if (fileType.startsWith('audio/')) {
-            // Ses dosyası için seçenekler
-            formatOptions = [
-                { value: 'mp3', text: 'MP3', desc: 'Yaygın ses formatı, iyi sıkıştırma' },
-                { value: 'wav', text: 'WAV', desc: 'Sıkıştırılmamış, yüksek kaliteli ses' },
-                { value: 'ogg', text: 'OGG', desc: 'Açık kaynaklı ses formatı' },
-                { value: 'flac', text: 'FLAC', desc: 'Kayıpsız ses sıkıştırma formatı' }
-            ];
-        } else if (fileType.startsWith('image/')) {
-            // Görsel dosyası için seçenekler
-            formatOptions = [
-                { value: 'jpg', text: 'JPG', desc: 'Fotoğraflar için yaygın format' },
-                { value: 'png', text: 'PNG', desc: 'Kayıpsız sıkıştırma, şeffaflık desteği' },
-                { value: 'webp', text: 'WebP', desc: 'Web için optimize edilmiş görsel formatı' },
-                { value: 'gif', text: 'GIF', desc: 'Animasyonlu görsel formatı' }
-            ];
-        } else if (fileType.startsWith('application/')) {
-            // Belge dosyası için seçenekler
-            formatOptions = [
-                { value: 'pdf', text: 'PDF', desc: 'Taşınabilir belge formatı' },
-                { value: 'docx', text: 'DOCX', desc: 'Microsoft Word belgesi' },
-                { value: 'txt', text: 'TXT', desc: 'Düz metin dosyası' }
-            ];
+            return 'fa-file-audio';
+        } else if (fileType.startsWith('video/')) {
+            return 'fa-file-video';
+        } else if (fileType.includes('pdf')) {
+            return 'fa-file-pdf';
+        } else if (fileType.includes('word') || fileType.includes('document')) {
+            return 'fa-file-word';
+        } else if (fileType.includes('text')) {
+            return 'fa-file-alt';
         } else {
-            // Varsayılan seçenekler
-            formatOptions = [
-                { value: 'mp3', text: 'MP3', desc: 'Yaygın ses formatı' },
-                { value: 'mp4', text: 'MP4', desc: 'Yaygın video formatı' },
-                { value: 'jpg', text: 'JPG', desc: 'Yaygın görsel formatı' },
-                { value: 'pdf', text: 'PDF', desc: 'Taşınabilir belge formatı' }
-            ];
+            return 'fa-file';
         }
+    }
+    
+    // Dosya türüne göre format seçeneklerini güncelleme
+    function updateFormatOptions(fileType) {
+        const convertToSelect = document.getElementById('convertTo');
         
-        // Seçenekleri ekle
-        formatOptions.forEach(option => {
-            addOption(convertTo, option.value, option.text);
-        });
+        // Mevcut seçenekleri temizle
+        convertToSelect.innerHTML = '';
         
-        // Format bilgisi bölümü oluştur
-        createFormatInfo(formatOptions);
-        
-        // İlk seçeneğin açıklamasını göster
-        showFormatDescription(formatOptions[0].value);
-        
-        // Format değiştiğinde açıklamayı güncelle
-        convertTo.addEventListener('change', () => {
-            showFormatDescription(convertTo.value);
-        });
+        // Dosya türüne göre uygun format seçeneklerini ekle
+        if (fileType.startsWith('video/')) {
+            // Video formatları
+            addOption(convertToSelect, 'mp4', 'MP4');
+            addOption(convertToSelect, 'avi', 'AVI');
+            addOption(convertToSelect, 'mov', 'MOV');
+            addOption(convertToSelect, 'wmv', 'WMV');
+            addOption(convertToSelect, 'mkv', 'MKV');
+            addOption(convertToSelect, 'gif', 'GIF');
+            addOption(convertToSelect, 'mp3', 'MP3 (Sadece Ses)');
+        } else if (fileType.startsWith('audio/')) {
+            // Ses formatları
+            addOption(convertToSelect, 'mp3', 'MP3');
+            addOption(convertToSelect, 'wav', 'WAV');
+            addOption(convertToSelect, 'ogg', 'OGG');
+            addOption(convertToSelect, 'aac', 'AAC');
+            addOption(convertToSelect, 'flac', 'FLAC');
+            addOption(convertToSelect, 'm4a', 'M4A');
+        } else if (fileType.startsWith('image/')) {
+            // Görsel formatları
+            addOption(convertToSelect, 'jpg', 'JPG');
+            addOption(convertToSelect, 'png', 'PNG');
+            addOption(convertToSelect, 'gif', 'GIF');
+            addOption(convertToSelect, 'webp', 'WEBP');
+            addOption(convertToSelect, 'bmp', 'BMP');
+            addOption(convertToSelect, 'tiff', 'TIFF');
+            addOption(convertToSelect, 'svg', 'SVG');
+        } else if (fileType.includes('pdf') || fileType.includes('word') || fileType.includes('document') || fileType.includes('text')) {
+            // Belge formatları
+            addOption(convertToSelect, 'pdf', 'PDF');
+            addOption(convertToSelect, 'docx', 'DOCX');
+            addOption(convertToSelect, 'doc', 'DOC');
+            addOption(convertToSelect, 'txt', 'TXT');
+            addOption(convertToSelect, 'rtf', 'RTF');
+            addOption(convertToSelect, 'odt', 'ODT');
+            addOption(convertToSelect, 'html', 'HTML');
+        } else {
+            // Bilinmeyen dosya türü için genel formatlar
+            addOption(convertToSelect, 'pdf', 'PDF');
+            addOption(convertToSelect, 'jpg', 'JPG');
+            addOption(convertToSelect, 'mp3', 'MP3');
+            addOption(convertToSelect, 'mp4', 'MP4');
+            addOption(convertToSelect, 'txt', 'TXT');
+        }
     }
     
     // Select'e seçenek ekleme yardımcı fonksiyonu
@@ -241,63 +594,140 @@ document.addEventListener('DOMContentLoaded', function() {
         option.textContent = text;
         selectElement.appendChild(option);
     }
+
+    
+    
+    // Bildirim gösterme fonksiyonu
+    function showNotification(title, message, type) {
+        // Mevcut bildirimleri temizle
+        const existingNotifications = document.querySelectorAll('.notification');
+        existingNotifications.forEach(notification => {
+            notification.remove();
+        });
+        
+        // Yeni bildirim oluştur
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <div class="notification-header">
+                <h3>${title}</h3>
+                <button class="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <p>${message}</p>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Bildirim gösterme animasyonu
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+        
+        // Kapatma butonuna tıklandığında
+        const closeBtn = notification.querySelector('.close-btn');
+        closeBtn.addEventListener('click', () => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        });
+        
+        // Otomatik kapanma
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 5000);
+    }
+    
+    // Dosya listesi temizlendiğinde dönüştürme seçeneklerini gizle
+    function clearFileList() {
+        fileList.innerHTML = '';
+        
+        // Dönüştürme seçeneklerini gizle (animasyonlu)
+        const conversionOptions = document.querySelector('.conversion-options');
+        conversionOptions.classList.remove('show');
+        
+        // Animasyon bittikten sonra tamamen gizle
+        setTimeout(() => {
+            conversionOptions.style.display = 'none';
+        }, 300);
+        
+        // Dönüştür butonunu devre dışı bırak
+        convertBtn.disabled = true;
+        
+        // Dosya yükleme alanından başarılı sınıfını kaldır
+        uploadArea.classList.remove('file-loaded');
+    }
     
     // Dönüştür butonuna tıklandığında
     convertBtn.addEventListener('click', () => {
-        // Dosya listesindeki tüm dosyaları dönüştür
+        // Dönüştürülecek dosyaları al
         const fileItems = document.querySelectorAll('.file-item');
+        if (fileItems.length === 0) return;
         
-        if (fileItems.length === 0) {
-            showNotification(
-                currentLanguage === 'tr' ? 'Hata' : 'Error',
-                currentLanguage === 'tr' ? 'Lütfen dönüştürmek için dosya seçin.' : 'Please select a file to convert.',
-                'error'
-            );
-            return;
-        }
-        
+        // Dönüştürme formatını al
         const convertTo = document.getElementById('convertTo').value;
         
-        // Her dosya için dönüştürme işlemi başlat
-        fileItems.forEach((fileItem, index) => {
-            // Dönüştürme işlemi simülasyonu
-            setTimeout(() => {
-                simulateConversion(fileInput.files[fileItem.dataset.index], convertTo);
-            }, index * 1000); // Her dosya için 1 saniye gecikme
-        });
+        // Dönüştürme işlemi simülasyonu
+        convertBtn.disabled = true;
+        convertBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${currentLanguage === 'tr' ? 'Dönüştürülüyor...' : 'Converting...'}`;
+        
+        // Dönüştürme işlemi başladı bildirimi
+        showNotification(
+            currentLanguage === 'tr' ? 'Dönüştürme başladı' : 'Conversion started',
+            currentLanguage === 'tr' ? 'Dosyalarınız dönüştürülüyor...' : 'Your files are being converted...',
+            'info'
+        );
+        
+        // Dönüştürme işlemi simülasyonu (2 saniye)
+        setTimeout(() => {
+            // Dönüştürme tamamlandı
+            convertBtn.innerHTML = `<i class="fas fa-check"></i> ${currentLanguage === 'tr' ? 'Dönüştürüldü' : 'Converted'}`;
+            
+            // Dönüştürme tamamlandı bildirimi
+            showNotification(
+                currentLanguage === 'tr' ? 'Dönüştürme tamamlandı' : 'Conversion completed',
+                currentLanguage === 'tr' ? 'Dosyalarınız başarıyla dönüştürüldü!' : 'Your files have been successfully converted!',
+                'success'
+            );
+            
+            // İlk dosyayı al
+            const firstFile = fileItems[0];
+            const fileName = firstFile.querySelector('.file-name').textContent;
+            const fileSize = firstFile.querySelector('.file-size').textContent;
+            const fileType = firstFile.querySelector('.file-type').textContent;
+            
+            // Yeni dosya adı oluştur
+            const newFileName = `${fileName.split('.')[0]}.${convertTo}`;
+            
+            // Dönüştürme sonuç bölümünü oluştur
+            createConversionResult(newFileName, fileSize, fileType);
+        }, 2000);
     });
     
     // Dönüştürme sonuç bölümü oluşturma
-    function createResultSection(file, convertTo) {
-        // Mevcut sonuç bölümünü kaldır
-        const existingResult = document.getElementById('conversionResult');
+    function createConversionResult(fileName, fileSize, fileType) {
+        // Varsa önceki sonuç bölümünü kaldır
+        const existingResult = document.querySelector('.conversion-result');
         if (existingResult) {
             existingResult.remove();
         }
         
-        // Yeni dosya adı oluştur
-        const newFileName = `${file.name.split('.')[0]}.${convertTo}`;
-        
-        // Dosya boyutu (örnek olarak orijinal dosyanın boyutunu kullanıyoruz)
-        const fileSize = formatFileSize(file.size);
-        
-        // Dosya türüne göre ikon belirle
-        const fileIcon = getFileIcon(convertTo);
-        
-        // Sonuç bölümü oluştur
+        // Yeni sonuç bölümü oluştur
         const resultSection = document.createElement('div');
-        resultSection.id = 'conversionResult';
         resultSection.className = 'conversion-result';
         
         resultSection.innerHTML = `
             <h3>${currentLanguage === 'tr' ? 'Dönüştürme Tamamlandı' : 'Conversion Complete'}</h3>
             <div class="result-file">
                 <div class="file-icon">
-                    <i class="fas ${fileIcon}"></i>
+                    <i class="fas fa-file-download"></i>
                 </div>
                 <div class="file-details">
-                    <div class="file-name">${newFileName}</div>
-                    <p class="file-size">${fileSize}</p>
+                    <div class="file-name">${fileName}</div>
+                    <div class="file-size">${fileSize}</div>
                 </div>
                 <button class="btn download-btn">
                     <i class="fas fa-download"></i> ${currentLanguage === 'tr' ? 'İndir' : 'Download'}
@@ -311,176 +741,191 @@ document.addEventListener('DOMContentLoaded', function() {
         // İndirme butonuna tıklandığında
         const downloadBtn = resultSection.querySelector('.download-btn');
         downloadBtn.addEventListener('click', () => {
-            // İndirme simülasyonu
-            simulateDownload(file, newFileName, convertTo);
+            // İndirme işlemi başladı
+            downloadBtn.disabled = true;
+            downloadBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${currentLanguage === 'tr' ? 'İndiriliyor...' : 'Downloading...'}`;
+            
+            // Dosya indirme işlemi
+            downloadFile(fileName, fileType);
+            
+            // İndirme tamamlandı
+            setTimeout(() => {
+                downloadBtn.innerHTML = `<i class="fas fa-check"></i> ${currentLanguage === 'tr' ? 'İndirildi' : 'Downloaded'}`;
+                
+                showNotification(
+                    currentLanguage === 'tr' ? 'İndirme başladı' : 'Download started',
+                    currentLanguage === 'tr' ? `${fileName} dosyası indiriliyor...` : `Downloading ${fileName}...`,
+                    'success'
+                );
+                
+                // Dönüştürme geçmişine ekle
+                addToHistory(fileName, fileSize, fileType);
+                
+                // Dönüştürme geçmişini göster
+                showConversionHistory();
+            }, 1000);
         });
+        
+        // Sonuç bölümünü görünür yap (animasyonlu)
+        setTimeout(() => {
+            resultSection.classList.add('show');
+            
+            // Sonuç bölümüne kaydır
+            resultSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
     }
     
-    // İndirme simülasyonu
-    function simulateDownload(file, newFileName, convertTo) {
-        // Gerçek bir uygulamada, sunucudan dönüştürülmüş dosyayı indirme işlemi yapılır
-        // Bu demo için bir dosya oluşturup indirme simülasyonu yapalım
-        
+    // Dosya indirme fonksiyonu
+    function downloadFile(fileName, fileType) {
         // Dosya türüne göre MIME tipi belirle
-        let mimeType;
-        switch(convertTo) {
-            case 'mp3':
-                mimeType = 'audio/mpeg';
-                break;
-            case 'mp4':
-                mimeType = 'video/mp4';
-                break;
-            case 'jpg':
-                mimeType = 'image/jpeg';
-                break;
-            case 'png':
-                mimeType = 'image/png';
-                break;
-            case 'pdf':
-                mimeType = 'application/pdf';
-                break;
-            case 'docx':
-                mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-                break;
-            default:
-                mimeType = 'application/octet-stream';
+        let mimeType = 'application/octet-stream'; // Varsayılan
+        
+        if (fileName.endsWith('.mp3')) {
+            mimeType = 'audio/mpeg';
+        } else if (fileName.endsWith('.mp4')) {
+            mimeType = 'video/mp4';
+        } else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg')) {
+            mimeType = 'image/jpeg';
+        } else if (fileName.endsWith('.png')) {
+            mimeType = 'image/png';
+        } else if (fileName.endsWith('.webp')) {
+            mimeType = 'image/webp';
+        } else if (fileName.endsWith('.pdf')) {
+            mimeType = 'application/pdf';
+        } else if (fileName.endsWith('.docx')) {
+            mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+        } else if (fileName.endsWith('.txt')) {
+            mimeType = 'text/plain';
         }
         
-        // Dosya içeriği (gerçek bir uygulamada dönüştürülmüş dosya içeriği olacak)
-        // Bu demo için orijinal dosyayı kullanıyoruz
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const blob = new Blob([e.target.result], { type: mimeType });
-            const url = URL.createObjectURL(blob);
-            
-            const downloadLink = document.createElement('a');
-            downloadLink.href = url;
-            downloadLink.download = newFileName;
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            
-            // URL'yi serbest bırak
-            setTimeout(() => {
-                URL.revokeObjectURL(url);
-            }, 100);
-            
-            showNotification(
-                currentLanguage === 'tr' ? 'İndirme başladı' : 'Download started',
-                `${newFileName} ${currentLanguage === 'tr' ? 'indiriliyor...' : 'is downloading...'}`,
-                'info'
-            );
-        };
-        reader.readAsArrayBuffer(file);
+        // Örnek bir dosya içeriği oluştur (gerçek uygulamada bu sunucudan gelir)
+        // Bu örnekte sadece bir metin dosyası oluşturuyoruz
+        const content = 'Bu bir örnek dönüştürülmüş dosya içeriğidir. Gerçek bir uygulamada, bu içerik sunucudan gelir.';
+        
+        // Blob oluştur
+        const blob = new Blob([content], { type: mimeType });
+        
+        // URL oluştur
+        const url = URL.createObjectURL(blob);
+        
+        // İndirme bağlantısı oluştur
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        
+        // Bağlantıyı gizle ve tıkla
+        document.body.appendChild(a);
+        a.style.display = 'none';
+        a.click();
+        
+        // Bağlantıyı kaldır
+        document.body.removeChild(a);
+        
+        // URL'yi serbest bırak
+        URL.revokeObjectURL(url);
     }
     
-    // Dönüştürme geçmişine ekleme
-    function addToHistory(file, convertTo) {
-        // Geçmiş verilerini al
-        let history = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+    // Dönüştürme geçmişini gösterme
+    function showConversionHistory() {
+        // Varsa önceki geçmiş bölümünü kaldır
+        const existingHistory = document.querySelector('.conversion-history');
+        if (existingHistory) {
+            existingHistory.remove();
+        }
         
-        // Yeni dönüştürme kaydı
-        const historyItem = {
-            fileName: file.name,
-            originalType: file.type,
-            convertedType: convertTo,
-            fileSize: file.size,
-            date: new Date().toISOString()
+        // Geçmiş bölümü oluştur
+        const historySection = document.createElement('div');
+        historySection.className = 'conversion-history';
+        
+        // Geçmiş verilerini al
+        const history = getConversionHistory();
+        
+        // Geçmiş içeriğini oluştur
+        historySection.innerHTML = `
+            <div class="history-header">
+                <h3>${currentLanguage === 'tr' ? 'Dönüştürme Geçmişi' : 'Conversion History'}</h3>
+                <button class="clear-history">
+                    ${currentLanguage === 'tr' ? 'Geçmişi Temizle' : 'Clear History'}
+                </button>
+            </div>
+            <div class="history-list">
+                ${history.length > 0 ? 
+                    history.map(item => `
+                        <div class="history-item">
+                            <div class="file-icon">
+                                <i class="fas fa-file"></i>
+                            </div>
+                            <div class="file-details">
+                                <div class="file-name">${item.fileName}</div>
+                                <div class="file-meta">
+                                    <span class="file-date">${item.date}</span>
+                                    <span class="file-size">${item.fileSize}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('') : 
+                    `<p class="no-history">${currentLanguage === 'tr' ? 'Henüz dönüştürme geçmişi yok.' : 'No conversion history yet.'}</p>`
+                }
+            </div>
+        `;
+        
+        // Geçmiş bölümünü sayfaya ekle
+        document.querySelector('.converter-container').appendChild(historySection);
+        
+        // Geçmişi temizle butonuna tıklandığında
+        const clearHistoryBtn = historySection.querySelector('.clear-history');
+        if (clearHistoryBtn) {
+            clearHistoryBtn.addEventListener('click', () => {
+                clearConversionHistory();
+                showConversionHistory(); // Geçmiş bölümünü güncelle
+                
+                showNotification(
+                    currentLanguage === 'tr' ? 'Geçmiş temizlendi' : 'History cleared',
+                    currentLanguage === 'tr' ? 'Dönüştürme geçmişi başarıyla temizlendi.' : 'Conversion history has been successfully cleared.',
+                    'info'
+                );
+            });
+        }
+        
+        // Geçmiş bölümünü görünür yap (animasyonlu)
+        setTimeout(() => {
+            historySection.classList.add('show');
+        }, 200);
+    }
+    
+    // Geçmiş verilerini alma
+    function getConversionHistory() {
+        const history = localStorage.getItem('conversionHistory');
+        return history ? JSON.parse(history) : [];
+    }
+    
+    // Geçmişe dönüştürme ekle
+    function addToHistory(fileName, fileSize, fileType) {
+        const history = getConversionHistory();
+        
+        // Yeni geçmiş öğesi
+        const newItem = {
+            fileName: fileName,
+            fileSize: fileSize,
+            fileType: fileType,
+            date: new Date().toLocaleDateString()
         };
         
-        // Geçmişin başına ekle (en son dönüştürme en üstte)
-        history.unshift(historyItem);
+        // Geçmişin başına ekle (en yeni en üstte)
+        history.unshift(newItem);
         
-        // Maksimum 10 kayıt tut
+        // Geçmiş maksimum 10 öğe olsun
         if (history.length > 10) {
-            history = history.slice(0, 10);
+            history.pop();
         }
         
         // Geçmişi kaydet
         localStorage.setItem('conversionHistory', JSON.stringify(history));
-        
-        // Geçmiş bölümünü güncelle
-        updateHistorySection();
     }
     
-    // Dönüştürme simülasyonu
-    function simulateConversion(file, convertTo) {
-        // Dönüştürme başladı bildirimi
-        const startedText = currentLanguage === 'tr' ? 'Dönüştürme başladı' : 'Conversion started';
-        const formatText = currentLanguage === 'tr' ? 'Hedef Format' : 'Target Format';
-        
-        showNotification(startedText, `${currentLanguage === 'tr' ? 'Dosya' : 'File'}: ${file.name} - ${formatText}: ${convertTo.toUpperCase()}`, 'info');
-        
-        // Dönüştürme işlemi sırasında buton görünümünü değiştir
-        convertBtn.disabled = true;
-        convertBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${currentLanguage === 'tr' ? 'Dönüştürülüyor...' : 'Converting...'}`;
-        
-        // Dönüştürme sonuç bölümünü temizle
-        if (document.getElementById('conversionResult')) {
-            document.getElementById('conversionResult').remove();
-        }
-        
-        setTimeout(() => {
-            convertBtn.innerHTML = currentLanguage === 'tr' ? 'Dönüştür' : 'Convert';
-            convertBtn.disabled = false;
-            
-            // Dönüştürme tamamlandı bildirimi
-            const completedText = currentLanguage === 'tr' ? 'Dönüştürme tamamlandı!' : 'Conversion completed!';
-            const convertedText = currentLanguage === 'tr' ? 'Dosyanız formatına dönüştürüldü.' : 'Your file has been converted to';
-            
-            showNotification(completedText, `${convertedText} ${convertTo.toUpperCase()}`, 'success');
-            
-            // Dönüştürme sonuç bölümünü oluştur
-            createResultSection(file, convertTo);
-            
-            // Dönüştürme geçmişine ekle
-            addToHistory(file, convertTo);
-            
-            // Paylaşım seçeneklerini göster
-            showShareOptions(file, convertTo);
-            
-        }, 3000); // 3 saniye gecikme
-    }
-    
-    // Paylaşım seçeneklerini gösterme
-    function showShareOptions(file, convertTo) {
-        // Paylaşım bölümü yoksa oluştur
-        const shareSection = document.createElement('div');
-        shareSection.className = 'share-section';
-        shareSection.innerHTML = `
-            <h4>${currentLanguage === 'tr' ? 'Dönüştürülen Dosyayı Paylaş' : 'Share Converted File'}</h4>
-            <div class="share-buttons">
-                <a class="share-button share-facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a class="share-button share-twitter" title="Twitter"><i class="fab fa-twitter"></i></a>
-                <a class="share-button share-whatsapp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                <a class="share-button share-telegram" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
-            </div>
-        `;
-        
-        // Mevcut paylaşım bölümünü kaldır
-        const existingShare = document.querySelector('.share-section');
-        if (existingShare) {
-            existingShare.remove();
-        }
-        
-        // Paylaşım bölümünü ekle
-        document.querySelector('.converter-container').appendChild(shareSection);
-        
-        // Paylaşım URL'si (gerçek uygulamada sunucudan gelecek)
-        const shareUrl = `https://donusturbunu.com/share/${Date.now()}`;
-        const shareText = `${currentLanguage === 'tr' ? 'Dosyamı DönüştürBunu ile dönüştürdüm' : 'I converted my file with DönüştürBunu'}: ${file.name} → ${convertTo.toUpperCase()}`;
-        
-        // Paylaşım butonlarına tıklandığında
-        shareSection.querySelector('.share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
-        shareSection.querySelector('.share-twitter').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
-        shareSection.querySelector('.share-whatsapp').href = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
-        shareSection.querySelector('.share-telegram').href = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
-        
-        // Yeni sekmede açılması için
-        shareSection.querySelectorAll('.share-button').forEach(btn => {
-            btn.setAttribute('target', '_blank');
-            btn.setAttribute('rel', 'noopener noreferrer');
-        });
+    // Geçmişi temizle
+    function clearConversionHistory() {
+        localStorage.removeItem('conversionHistory');
     }
     
     // Dosya türüne göre ikon belirleme
@@ -654,74 +1099,24 @@ document.addEventListener('DOMContentLoaded', function() {
             'tr': {
                 'home': 'Ana Sayfa',
                 'contact': 'İletişim',
-                'video': 'Video',
-                'audio': 'Ses',
-                'image': 'Görsel',
-                'document': 'Belge',
-                'formatLabel': 'Dönüştürülecek format:',
-                'convertBtn': 'Dönüştür',
-                'dropText': 'Dosyanızı sürükleyin veya',
-                'browse': 'gözatın',
-                'fileSelected': 'Seçilen dosya:',
-                'fileSize': 'Dosya boyutu:',
-                'fileType': 'Dosya türü:',
-                'conversionComplete': 'Dönüştürme Tamamlandı',
-                'download': 'İndir',
-                'conversionStarted': 'Dönüştürme başladı',
-                'conversionCompleted': 'Dönüştürme tamamlandı!',
-                'downloadStarted': 'İndirme başladı',
-                'converting': 'Dönüştürülüyor...',
-                'fileTooBig': 'Dosya boyutu çok büyük',
-                'maxFileSize': 'Maksimum 20MB boyutunda dosya yükleyebilirsiniz.',
-                'contactTitle': 'İletişim',
-                'name': 'Adınız',
-                'email': 'E-posta',
-                'message': 'Mesajınız',
-                'send': 'Gönder',
-                'preview': 'Önizle',
-                'remove': 'Kaldır',
-                'previewNotAvailable': 'Bu dosya türü için önizleme kullanılamıyor.',
-                'conversionHistory': 'Dönüştürme Geçmişi',
-                'clearHistory': 'Geçmişi Temizle',
-                'noHistory': 'Henüz dönüştürme geçmişi yok.',
-                'shareFile': 'Dönüştürülen Dosyayı Paylaş',
-                'multipleFilesHint': 'Birden fazla dosya seçmek için Ctrl tuşuna basılı tutun'
+                'privacy': 'Gizlilik Politikası',
+                'terms': 'Kullanım Şartları',
+                'converters': 'Dönüştürücüler',
+                'videoConverter': 'Video Dönüştürücü',
+                'audioConverter': 'Ses Dönüştürücü',
+                'imageConverter': 'Görsel Dönüştürücü',
+                'documentConverter': 'Belge Dönüştürücü'
             },
             'en': {
                 'home': 'Home',
                 'contact': 'Contact',
-                'video': 'Video',
-                'audio': 'Audio',
-                'image': 'Image',
-                'document': 'Document',
-                'formatLabel': 'Convert to format:',
-                'convertBtn': 'Convert',
-                'dropText': 'Drag your file or',
-                'browse': 'browse',
-                'fileSelected': 'Selected file:',
-                'fileSize': 'File size:',
-                'fileType': 'File type:',
-                'conversionComplete': 'Conversion Complete',
-                'download': 'Download',
-                'conversionStarted': 'Conversion started',
-                'conversionCompleted': 'Conversion completed!',
-                'downloadStarted': 'Download started',
-                'converting': 'Converting...',
-                'fileTooBig': 'File size too large',
-                'maxFileSize': 'You can upload files up to 20MB.',
-                'contactTitle': 'Contact',
-                'name': 'Your Name',
-                'email': 'Email',
-                'message': 'Your Message',
-                'send': 'Send',
-                'preview': 'Preview',
-                'remove': 'Remove',
-                'previewNotAvailable': 'Preview not available for this file type.',
-                'conversionHistory': 'Conversion History',
-                'clearHistory': 'Clear History',
-                'noHistory': 'No conversion history yet.',
-                'shareFile': 'Share Converted File',
-                'multipleFilesHint': 'Hold Ctrl key to select multiple files'
+                'privacy': 'Privacy Policy',
+                'terms': 'Terms of Use',
+                'converters': 'Converters',
+                'videoConverter': 'Video Converter',
+                'audioConverter': 'Audio Converter',
+                'imageConverter': 'Image Converter',
+                'documentConverter': 'Document Converter'
             }
         };
         
@@ -952,276 +1347,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     }
 
-    // Geçmiş bölümünü güncelleme
-    function updateHistorySection() {
-        // Geçmiş bölümü yoksa oluştur
-        if (!document.querySelector('.history-section')) {
-            const historySection = document.createElement('div');
-            historySection.className = 'history-section';
-            historySection.innerHTML = `
-                <div class="history-header">
-                    <h3>${currentLanguage === 'tr' ? 'Dönüştürme Geçmişi' : 'Conversion History'}</h3>
-                    <button class="clear-history">${currentLanguage === 'tr' ? 'Geçmişi Temizle' : 'Clear History'}</button>
-                </div>
-                <div class="history-items"></div>
-            `;
-            
-            document.querySelector('.converter-container').appendChild(historySection);
-            
-            // Geçmişi temizle butonuna tıklandığında
-            const clearBtn = historySection.querySelector('.clear-history');
-            clearBtn.addEventListener('click', () => {
-                localStorage.removeItem('conversionHistory');
-                updateHistorySection();
-            });
-        }
+    // Dosya listesi temizlendiğinde dönüştürme seçeneklerini gizle
+    function clearFileList() {
+        fileList.innerHTML = '';
         
-        // Geçmiş öğelerini güncelle
-        const historyItems = document.querySelector('.history-items');
-        const history = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+        // Dönüştürme seçeneklerini gizle (animasyonlu)
+        const conversionOptions = document.querySelector('.conversion-options');
+        conversionOptions.classList.remove('show');
         
-        if (history.length === 0) {
-            historyItems.innerHTML = `<div class="history-empty">${currentLanguage === 'tr' ? 'Henüz dönüştürme geçmişi yok.' : 'No conversion history yet.'}</div>`;
-            return;
-        }
-        
-        historyItems.innerHTML = '';
-        
-        history.forEach(item => {
-            const date = new Date(item.date).toLocaleDateString();
-            const fileSize = formatFileSize(item.fileSize);
-            
-            const historyItem = document.createElement('div');
-            historyItem.className = 'file-item';
-            historyItem.innerHTML = `
-                <div class="file-icon">
-                    <i class="fas ${getFileIcon(item.convertedType)}"></i>
-                </div>
-                <div class="file-details">
-                    <div class="file-name">${item.fileName} → ${item.convertedType.toUpperCase()}</div>
-                    <div class="file-meta">
-                        <span class="file-size">${fileSize}</span>
-                        <span class="file-date">${date}</span>
-                    </div>
-                </div>
-            `;
-            
-            historyItems.appendChild(historyItem);
-        });
-    }
-
-    // Footer bağlantıları için işlevsellik
-    const footerHomeLink = document.querySelector('.footer-column ul li:first-child a');
-    const footerContactLink = document.querySelector('.footer-column ul li:nth-child(2) a');
-    
-    // Ana sayfa bağlantısına tıklandığında
-    if (footerHomeLink) {
-        footerHomeLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            // Ana sayfa sekmesini aktif et
-            const homeNavLink = document.querySelector('.nav-links a[data-section="home"]');
-            if (homeNavLink) {
-                homeNavLink.click();
-            }
-            
-            // Sayfanın en üstüne kaydır
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    }
-    
-    // İletişim bağlantısına tıklandığında
-    if (footerContactLink) {
-        footerContactLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            // İletişim sekmesini aktif et
-            const contactNavLink = document.querySelector('.nav-links a[data-section="contact"]');
-            if (contactNavLink) {
-                contactNavLink.click();
-            }
-            
-            // İletişim bölümüne kaydır
-            const contactSection = document.getElementById('contact-section');
-            if (contactSection) {
-                contactSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    }
-    
-    // Gizlilik Politikası ve Kullanım Şartları bağlantıları
-    const privacyLink = document.querySelector('.footer-column ul li:nth-child(3) a');
-    const termsLink = document.querySelector('.footer-column ul li:nth-child(4) a');
-    
-    // Gizlilik Politikası bağlantısına tıklandığında
-    if (privacyLink) {
-        privacyLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            // Gizlilik Politikası modalını göster
-            showModal(
-                currentLanguage === 'tr' ? 'Gizlilik Politikası' : 'Privacy Policy',
-                getPrivacyPolicyContent(currentLanguage)
-            );
-        });
-    }
-    
-    // Kullanım Şartları bağlantısına tıklandığında
-    if (termsLink) {
-        termsLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            // Kullanım Şartları modalını göster
-            showModal(
-                currentLanguage === 'tr' ? 'Kullanım Şartları' : 'Terms of Use',
-                getTermsContent(currentLanguage)
-            );
-        });
-    }
-    
-    // Modal gösterme fonksiyonu
-    function showModal(title, content) {
-        // Mevcut modalı kaldır
-        const existingModal = document.querySelector('.modal');
-        if (existingModal) {
-            existingModal.remove();
-        }
-        
-        // Yeni modal oluştur
-        const modal = document.createElement('div');
-        modal.className = 'modal';
-        modal.innerHTML = `
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>${title}</h3>
-                    <button class="close-modal"><i class="fas fa-times"></i></button>
-                </div>
-                <div class="modal-body">
-                    ${content}
-                </div>
-            </div>
-        `;
-        
-        // Modalı sayfaya ekle
-        document.body.appendChild(modal);
-        
-        // Modal arka planına tıklandığında kapat
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal(modal);
-            }
-        });
-        
-        // Kapatma butonuna tıklandığında
-        const closeBtn = modal.querySelector('.close-modal');
-        closeBtn.addEventListener('click', () => {
-            closeModal(modal);
-        });
-        
-        // ESC tuşuna basıldığında kapat
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeModal(modal);
-            }
-        });
-        
-        // Modal açılma animasyonu
+        // Animasyon bittikten sonra tamamen gizle
         setTimeout(() => {
-            modal.classList.add('show');
-        }, 10);
-    }
-    
-    // Modal kapatma fonksiyonu
-    function closeModal(modal) {
-        modal.classList.remove('show');
-        setTimeout(() => {
-            modal.remove();
+            conversionOptions.style.display = 'none';
         }, 300);
-    }
-    
-    // Gizlilik Politikası içeriği
-    function getPrivacyPolicyContent(language) {
-        if (language === 'tr') {
-            return `
-                <h4>Gizlilik Politikamız</h4>
-                <p>DönüştürBunu olarak, gizliliğinize saygı duyuyoruz ve kişisel verilerinizin korunmasını önemsiyoruz.</p>
-                
-                <h5>Toplanan Bilgiler</h5>
-                <p>Sitemizi kullanırken, dönüştürdüğünüz dosyalar sunucularımıza yüklenir. Bu dosyalar, dönüştürme işlemi tamamlandıktan sonra 24 saat içinde otomatik olarak silinir.</p>
-                
-                <h5>Çerezler</h5>
-                <p>Sitemiz, daha iyi bir kullanıcı deneyimi sunmak için çerezleri kullanır. Bu çerezler, tercihlerinizi hatırlamak ve site trafiğini analiz etmek için kullanılır.</p>
-                
-                <h5>Üçüncü Taraf Hizmetleri</h5>
-                <p>Sitemiz, Google Analytics gibi üçüncü taraf hizmetlerini kullanabilir. Bu hizmetler, kendi gizlilik politikalarına sahiptir ve bu politikalar için ilgili hizmet sağlayıcılarının web sitelerini ziyaret etmenizi öneririz.</p>
-                
-                <h5>Değişiklikler</h5>
-                <p>Gizlilik politikamızı zaman zaman güncelleyebiliriz. Değişiklikler bu sayfada yayınlanacaktır.</p>
-                
-                <p>Son güncelleme: 1 Ocak 2023</p>
-            `;
-        } else {
-            return `
-                <h4>Our Privacy Policy</h4>
-                <p>At DönüştürBunu, we respect your privacy and are committed to protecting your personal data.</p>
-                
-                <h5>Information Collected</h5>
-                <p>When using our site, the files you convert are uploaded to our servers. These files are automatically deleted within 24 hours after the conversion is completed.</p>
-                
-                <h5>Cookies</h5>
-                <p>Our site uses cookies to enhance user experience. These cookies are used to remember your preferences and analyze site traffic.</p>
-                
-                <h5>Third-Party Services</h5>
-                <p>Our site may use third-party services such as Google Analytics. These services have their own privacy policies, and we recommend visiting the respective service providers' websites for these policies.</p>
-                
-                <h5>Changes</h5>
-                <p>We may update our privacy policy from time to time. Changes will be posted on this page.</p>
-                
-                <p>Last updated: January 1, 2023</p>
-            `;
-        }
-    }
-    
-    // Kullanım Şartları içeriği
-    function getTermsContent(language) {
-        if (language === 'tr') {
-            return `
-                <h4>Kullanım Şartlarımız</h4>
-                <p>DönüştürBunu'yu kullanarak, aşağıdaki şartları kabul etmiş olursunuz:</p>
-                
-                <h5>Hizmet Kullanımı</h5>
-                <p>DönüştürBunu, dosya dönüştürme hizmeti sunar. Bu hizmeti yalnızca yasal amaçlar için kullanmalısınız.</p>
-                
-                <h5>Telif Hakkı</h5>
-                <p>Dönüştürdüğünüz dosyaların telif haklarına saygı göstermelisiniz. Telif hakkı ihlali içeren dosyaları dönüştürmek için sitemizi kullanmamalısınız.</p>
-                
-                <h5>Sorumluluk Reddi</h5>
-                <p>DönüştürBunu, dönüştürülen dosyaların kalitesi veya doğruluğu konusunda herhangi bir garanti vermez. Hizmetimizi kendi sorumluluğunuzda kullanırsınız.</p>
-                
-                <h5>Değişiklikler</h5>
-                <p>Kullanım şartlarımızı zaman zaman güncelleyebiliriz. Değişiklikler bu sayfada yayınlanacaktır.</p>
-                
-                <p>Son güncelleme: 1 Ocak 2023</p>
-            `;
-        } else {
-            return `
-                <h4>Our Terms of Use</h4>
-                <p>By using DönüştürBunu, you agree to the following terms:</p>
-                
-                <h5>Service Usage</h5>
-                <p>DönüştürBunu provides file conversion services. You should use this service only for legal purposes.</p>
-                
-                <h5>Copyright</h5>
-                <p>You must respect the copyright of the files you convert. You should not use our site to convert files that infringe copyright.</p>
-                
-                <h5>Disclaimer</h5>
-                <p>DönüştürBunu does not provide any guarantee regarding the quality or accuracy of the converted files. You use our service at your own risk.</p>
-                
-                <h5>Changes</h5>
-                <p>We may update our terms of use from time to time. Changes will be posted on this page.</p>
-                
-                <p>Last updated: January 1, 2023</p>
-            `;
-        }
+        
+        // Dönüştür butonunu devre dışı bırak
+        convertBtn.disabled = true;
+        
+        // Dosya yükleme alanından başarılı sınıfını kaldır
+        uploadArea.classList.remove('file-loaded');
     }
 }); 
